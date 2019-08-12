@@ -2,11 +2,12 @@ Red []
 
 branch-colors: [0.152.212 179.99.5 227.32.23 255.211.0 0.120.42 243.169.187 160.165.169 155.0.86 0.54.136 0.0.0 149.205.186 0.164.167 238.124.14 132.184.23]
 ref-names-color: 168.169.169
+msg-color: 0.0.0
 commit-radius: 3
-init: 10x10
+init: 70x10
 d: 20x20
 
-draw-commit: func [commit ref-names children] [
+draw-commit: func [commit ref-names msg children] [
   node: select commits commit
   color: pick branch-colors node/x
   pos: as-pair init/x + (d/x * (node/x - 1))
@@ -14,10 +15,23 @@ draw-commit: func [commit ref-names children] [
   ; draw commit              
   result: reduce [
     'pen color 'fill-pen color
+    'text as-pair 5 pos/y - 10 commit
     'circle pos commit-radius
-    'text (pos + (as-pair (6 - node/x) * d/x -5)) commit
-    'pen ref-names-color
-    'text (pos + (as-pair (9 - node/x) * d/x -5)) ref-names
+  ]
+
+  msg-pos: as-pair 9 * d/x pos/y - 10
+  if not empty? ref-names [
+    x: pos/x + (((length? ref-names) / 3 + 1) * d/x) 
+    msg-pos/x: max msg-pos/x x
+    repend result [
+      'pen ref-names-color
+      'text pos + 5x-10 ref-names
+    ]
+  ]
+  
+  repend result [
+    'pen msg-color
+    'text msg-pos msg
   ]
 
   ; draw line between commit & its children
@@ -138,7 +152,7 @@ git-graph: func [git-log] [
     ; update commits position
     put commits commit as-pair x y
     ; draw commit
-    append graph draw-commit commit ref-names children
+    append graph draw-commit commit ref-names msg children
     y: y + 1
   ]
 

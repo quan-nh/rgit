@@ -13,7 +13,7 @@ load-dir: does [
 
 load-git-history: func [dir] [
     change-dir dir
-    call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -20 --output=/tmp/git-log"
+    call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -30 --output=/tmp/git-log"
 ]
 
 view win: layout [
@@ -22,5 +22,5 @@ view win: layout [
     button "Load" [load-dir]
     button "Quit" [Quit]
     return
-    canvas: base 800x600 white draw [] 
+    canvas: base 800x600 white
 ]

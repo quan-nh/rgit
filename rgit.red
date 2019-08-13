@@ -1,21 +1,15 @@
 Red [Needs: 'View]
 
+do %git-cmd.red
 do %git-graph.red
 
 load-dir: does [
   repo-dir: request-dir
   if not none? repo-dir [
-    win/text: to string! repo-dir
-    
     change-dir repo-dir
-    call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -18 --output=/tmp/git-log"
-    
-    changes-list: copy ""
-    call/output "git status --porcelain" changes-list
-    changes/data: split changes-list #"^/"
-    remove back tail changes/data
-
-    canvas/draw: git-graph read/lines %/tmp/git-log
+    win/text: to string! repo-dir
+    canvas/draw: git-graph git-log
+    changes/data: git-status
   ]
 ]
 
@@ -24,8 +18,8 @@ view win: layout [
 
   origin 10x10 space 10x10
   button "Open" [load-dir]
-  button "Pull"
-  button "Push" [call "git push"]
+  button "Pull" [git-pull]
+  button "Push" [git-push]
   return
     
   canvas: base 600x360 white
@@ -48,21 +42,19 @@ view win: layout [
   message: area 300x50
 
   across
-  button "commit"
-  button "commit & push" [
-    foreach change staged-changes/data [
-      c: split change #" "
-      file: last c
-      mode: first back back tail c
-      switch mode [
-        "M"  [call/wait append "git add " file]
-        "MM" [call/wait append "git add " file]
-      ]
-    ]
-    call/wait repend "git commit -m '" [message/text "'"]
-    call/wait "git push"
+  button "commit" [
+    git-add staged-changes/data
+    git-commit message/text
+    ; cleanup
+    message/text: ""
   ]
-
+  button "commit & push" [
+    git-add staged-changes/data
+    git-commit message/text
+    git-push
+    ; cleanup
+    message/text: ""
+  ]
   return
 
   rich-text 910x300 data [i b "Git" /b font 24 red " Diff " /font blue "Here!" /i]

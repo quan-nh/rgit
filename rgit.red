@@ -45,14 +45,20 @@ view win: layout [
   button "commit" [
     git-add staged-changes/data
     git-commit message/text
-    ; cleanup
+    ; reload
+    canvas/draw: git-graph git-log
+    changes/data: git-status
+    staged-changes/data: []
     message/text: ""
   ]
   button "commit & push" [
     git-add staged-changes/data
     git-commit message/text
     git-push
-    ; cleanup
+    ; reload
+    canvas/draw: git-graph git-log
+    changes/data: git-status
+    staged-changes/data: []
     message/text: ""
   ]
   return

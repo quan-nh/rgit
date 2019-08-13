@@ -1,7 +1,7 @@
 Red [Needs: 'View]
 
-do %git-cmd.red
-do %git-graph.red
+#include %git-cmd.red
+#include %git-graph.red
 
 load-dir: does [
   repo-dir: request-dir

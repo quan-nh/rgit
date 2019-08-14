@@ -17,18 +17,24 @@ git-status: does [
 git-add: func [changes-blk] [
   foreach change changes-blk [
     file: last split change #" "
-    call/wait append "git add " file
+    call/wait append "git add --force -- " file
   ]
 ]
 
-git-commit: func [msg] [
-  call/wait repend "git commit -m '" [msg "'"]
+git-commit: func [msg amend?] [
+  cmd: copy "git commit"
+  if amend? [append cmd " --amend"]
+
+  call/wait rejoin [cmd " -m '" msg "'"]
 ]
 
 git-pull: does [
   call "git pull"
 ]
 
-git-push: does [
-  call "git push"
+git-push: func [force?] [
+  cmd: copy "git push"
+  if force? [append cmd " --force"]
+
+  call/wait cmd
 ]

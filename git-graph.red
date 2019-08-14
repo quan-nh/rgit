@@ -111,13 +111,15 @@ git-graph: func [git-log] [
   branches: make map! []            ; key-value: commit & its branch
   active-branches: make vector! [1] ; list active branches, HEAD branch is the first one
   graph: copy [line-width 2]
+  git-head: copy []
   y: 1
 
   ; find the HEAD & set it as first branch
   foreach log git-log [
-    set [commit _ ref-names _] split log #"|"
+    set [commit _ ref-names msg] split log #"|"
     if find ref-names "HEAD ->" [
       put branches commit 1
+      put git-head commit msg
       break
     ]
   ]
@@ -156,5 +158,5 @@ git-graph: func [git-log] [
     y: y + 1
   ]
 
-  graph
+  reduce [graph git-head]
 ]

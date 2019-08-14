@@ -34,7 +34,7 @@ git-pull: does [
 
 git-push: func [force?] [
   cmd: copy "git push"
-  if force? [append cmd " --force"]
+  if force? [append cmd " --force-with-lease"]
 
-  call/wait cmd
+  call/wait rejoin [cmd " origin"]
 ]

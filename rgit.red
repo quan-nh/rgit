@@ -11,21 +11,27 @@ load-dir: does [
   if not none? repo-dir [
     change-dir repo-dir
     win/text: to string! repo-dir
-    set [graph git-head] git-graph git-log
-    canvas/draw: graph
-    changes/data: git-status
+    load-repo  
   ]
+]
+
+load-repo: does [
+  set [graph git-head] git-graph git-log
+  canvas/draw: graph
+  changes/data: git-status
+  clear staged-changes/data
 ]
 
 view win: layout [
   title "rgit"
-
-  origin 10x10 space 10x10
-  button "Pull" [git-pull]
-  button "Push" [git-push]
-  return
     
-  canvas: base 600x360 white
+  canvas: base 600x360 white focus
+  on-key [
+    case [
+      all [event/key = #"^O" event/ctrl?] [load-dir]
+      all [event/key = #"^P" event/ctrl?] [git-pull load-repo]
+    ]
+  ]
 
   below
   text "Staged Changes"
@@ -56,10 +62,7 @@ view win: layout [
     git-add staged-changes/data
     git-commit message/text amend/data
     ; reload
-    set [graph git-head] git-graph git-log
-    canvas/draw: graph
-    changes/data: git-status
-    staged-changes/data: []
+    load-repo
     message/text: ""
   ]
   button "commit & push" [
@@ -68,14 +71,10 @@ view win: layout [
     git-commit message/text amend/data
     git-push amend/data
     ; reload
-    set [graph git-head] git-graph git-log
-    canvas/draw: graph
-    changes/data: git-status
-    staged-changes/data: []
+    load-repo
     message/text: ""
   ]
   return
 
-  rich-text 910x300 focus data [i b "Git" /b font 24 red " Diff " /font blue "Here!" /i]
-  on-key [if event/key = #"^O" [load-dir]]
+  rich-text 910x300 data [i b "Git" /b font 24 red " Diff " /font blue "Here!" /i]
 ]

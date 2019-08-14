@@ -29,7 +29,7 @@ git-commit: func [msg amend?] [
 ]
 
 git-pull: does [
-  call "git pull"
+  call/wait "git pull"
 ]
 
 git-push: func [force?] [

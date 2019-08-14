@@ -17,12 +17,12 @@ view win: layout [
   title "rgit"
 
   origin 10x10 space 10x10
-  button "Open" [load-dir]
   button "Pull" [git-pull]
   button "Push" [git-push]
   return
     
   canvas: base 600x360 white
+  on-key [if event/key = #"^O" [load-dir]]
 
   below
   text "Staged Changes"
@@ -64,4 +64,5 @@ view win: layout [
   return
 
   rich-text 910x300 data [i b "Git" /b font 24 red " Diff " /font blue "Here!" /i]
+  on-key [if event/key = #"^O" [load-dir]]
 ]

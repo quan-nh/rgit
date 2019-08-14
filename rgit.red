@@ -44,7 +44,7 @@ view win: layout [
   across
   button "commit" [
     git-add staged-changes/data
-    git-commit message/text
+    git-commit uppercase/part message/text 1
     ; reload
     canvas/draw: git-graph git-log
     changes/data: git-status
@@ -53,7 +53,7 @@ view win: layout [
   ]
   button "commit & push" [
     git-add staged-changes/data
-    git-commit message/text
+    git-commit uppercase/part message/text 1
     git-push
     ; reload
     canvas/draw: git-graph git-log

@@ -26,9 +26,9 @@ git-commit: func [msg] [
 ]
 
 git-pull: does [
-  call/wait "git pull"
+  call "git pull"
 ]
 
 git-push: does [
-  call/wait "git push"
+  call "git push"
 ]

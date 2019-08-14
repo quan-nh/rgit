@@ -34,6 +34,11 @@ view win: layout [
   ]
 
   below
+  text "Branches"
+  branches: text-list 300x100 data ["feature/branch"
+"master"
+"remotes/origin/master"]
+  
   text "Staged Changes"
   staged-changes: text-list 300x100 data []
   on-dbl-click [
@@ -64,6 +69,7 @@ view win: layout [
     ; reload
     load-repo
     message/text: ""
+    amend/data: false
   ]
   button "commit & push" [
     uppercase/part message/text 1
@@ -73,6 +79,7 @@ view win: layout [
     ; reload
     load-repo
     message/text: ""
+    amend/data: false
   ]
   return
 

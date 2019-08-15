@@ -18,6 +18,7 @@ load-dir: does [
 load-repo: does [
   set [graph git-head] git-graph git-log
   canvas/draw: graph
+  branches-list-face/data: git-branch
   changes/data: git-status
   clear staged-changes/data
 ]
@@ -39,9 +40,7 @@ view win: layout [
 
   space 10x10
   text "Branches"
-  branches: text-list 300x100 data ["* feature/branch"
-"  master"
-"  remotes/origin/master"]
+  branches-list-face: text-list 300x100 data []
   
   text "Staged Changes"
   staged-changes: text-list 300x100 data []

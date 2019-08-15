@@ -1,7 +1,7 @@
 Red []
 
 git-log: does [
-  call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -18 --output=/tmp/git-log"
+  call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -25 --output=/tmp/git-log"
   read/lines %/tmp/git-log
 ]
 

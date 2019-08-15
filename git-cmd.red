@@ -16,7 +16,9 @@ git-status: does [
 
 git-add: func [changes-blk] [
   foreach change changes-blk [
-    call/console/wait append "git add --force -- " last split change #" "
+    cmd: copy "git add --force -- "
+    append cmd last split change #" "
+    call/console/wait cmd
   ]
 ]
 

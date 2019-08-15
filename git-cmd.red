@@ -49,6 +49,15 @@ git-branch: does [
   blk
 ]
 
+git-new-branch: func [branch-name] [
+  call/wait append copy "git branch --no-track " branch-name
+  call append copy "git checkout " branch-name
+]
+
+git-checkout-branch: func [branch-name] [
+  call append copy "git checkout " branch-name
+]
+
 git-diff: func [file] [
   diff: copy ""
   call/output/wait append copy "git diff -- " file diff

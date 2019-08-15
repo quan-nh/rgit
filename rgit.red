@@ -3,6 +3,7 @@ Red [Needs: 'View]
 #include %git-cmd.red
 #include %git-diff.red
 #include %git-graph.red
+#include %prompt-popup.red
 
 graph: copy []
 git-head: copy []
@@ -22,7 +23,7 @@ load-repo: does [
   branches-tlf/data: git-branch
   changes/data: git-status
   clear staged-changes/data
-  message/text: ""
+  clear message/text
   amend/data: false
   diff-rtf/draw: none
 ]
@@ -48,10 +49,28 @@ view win: layout [
   ]
   return
 
-  space 10x10
-  text "Branches"
+  panel [
+    origin 0x0
+    text "Branches"
+    button "+ branch" [
+      if branch-name: prompt-popup "Branch Name:" [
+        git-new-branch branch-name
+        git-checkout-branch branch-name
+        load-repo
+      ]
+    ]
+    button "+ feature" [
+      if branch-name: prompt-popup "Feature Branch Name:" [
+        branch-name: append copy "feature/" branch-name
+        git-new-branch branch-name
+        git-checkout-branch branch-name
+        load-repo
+      ]
+    ]
+  ]
   branches-tlf: text-list 300x100 data []
   
+  space 10x10
   text "Staged Changes"
   staged-changes: text-list 300x100 data [] [
     diff-rtf/draw: diff-layout git-diff pick staged-changes/data staged-changes/selected

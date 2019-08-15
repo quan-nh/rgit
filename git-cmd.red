@@ -1,8 +1,11 @@
 Red []
 
 git-log: does [
-  call/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -25 --output=/tmp/git-log"
-  read/lines %/tmp/git-log
+  log: copy ""
+  call/output/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -25" log
+  log-blk: split log #"^/"
+  remove back tail log-blk
+  log-blk
 ]
 
 git-status: does [
@@ -10,7 +13,6 @@ git-status: does [
   call/output "git status --porcelain" changes-list
   changes-blk: split changes-list #"^/"
   remove back tail changes-blk
-
   changes-blk
 ]
 
@@ -45,6 +47,5 @@ git-branch: does [
   call/output/wait "git branch -a --no-color" b
   blk: split b #"^/"
   remove back tail blk
-
   blk
 ]

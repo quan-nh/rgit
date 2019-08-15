@@ -18,9 +18,8 @@ git-status: does [
 
 git-add: func [changes-blk] [
   foreach change changes-blk [
-    cmd: copy "git add --force -- "
-    append cmd last split change #" "
-    call/console/wait cmd
+    file: last split change #" "
+    call/console/wait append copy "git add --force -- " file
   ]
 ]
 
@@ -48,4 +47,13 @@ git-branch: does [
   blk: split b #"^/"
   remove back tail blk
   blk
+]
+
+git-diff: func [file] [
+  diff: copy ""
+  call/output/wait append copy "git diff -- " file diff
+  diff-blk: split diff #"^/"
+  remove/part diff-blk 4
+  remove back tail diff-blk
+  diff-blk
 ]

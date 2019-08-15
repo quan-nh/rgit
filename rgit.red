@@ -1,6 +1,7 @@
 Red [Needs: 'View]
 
 #include %git-cmd.red
+#include %git-diff.red
 #include %git-graph.red
 
 graph: copy []
@@ -18,9 +19,12 @@ load-dir: does [
 load-repo: does [
   set [graph git-head] git-graph git-log
   canvas/draw: graph
-  branches-list-face/data: git-branch
+  branches-tlf/data: git-branch
   changes/data: git-status
   clear staged-changes/data
+  message/text: ""
+  amend/data: false
+  diff-rtf/draw: none
 ]
 
 view win: layout [
@@ -35,22 +39,32 @@ view win: layout [
     button "Push" [git-push load-repo]
   ]
  
-  canvas: base 600x500 white focus on-key [if event/key = #"^O" [load-dir]]
+  canvas: base 600x500 white focus
+  on-key [
+    switch event/key [
+      #"^O" [load-dir]
+      #"^R" [git-pull load-repo]
+    ]
+  ]
   return
 
   space 10x10
   text "Branches"
-  branches-list-face: text-list 300x100 data []
+  branches-tlf: text-list 300x100 data []
   
   text "Staged Changes"
-  staged-changes: text-list 300x100 data []
+  staged-changes: text-list 300x100 data [] [
+    diff-rtf/draw: diff-layout git-diff pick staged-changes/data staged-changes/selected
+  ]
   on-dbl-click [
     append changes/data pick staged-changes/data staged-changes/selected
     remove at staged-changes/data staged-changes/selected
   ]
 
   text "Changes"
-  changes: text-list 300x100 data []
+  changes: text-list 300x100 data [] [
+    diff-rtf/draw: diff-layout git-diff pick changes/data changes/selected
+  ]
   on-dbl-click [
     append staged-changes/data pick changes/data changes/selected
     remove at changes/data changes/selected
@@ -71,8 +85,6 @@ view win: layout [
     git-commit message/text amend/data
     ; reload
     load-repo
-    message/text: ""
-    amend/data: false
   ]
   button "commit & push" [
     uppercase/part message/text 1
@@ -81,10 +93,8 @@ view win: layout [
     git-push amend/data
     ; reload
     load-repo
-    message/text: ""
-    amend/data: false
   ]
   return
 
-  rich-text 910x300 data [i b "Git" /b font 24 red " Diff " /font blue "Here!" /i]
+  diff-rtf: rich-text 910x300
 ]

@@ -18,22 +18,30 @@ load-dir: does [
 load-repo: does [
   set [graph git-head] git-graph git-log
   canvas/draw: graph
+  branches-list-face/data: git-branch
   changes/data: git-status
   clear staged-changes/data
 ]
 
 view win: layout [
   title "rgit"
-    
-  canvas: base 600x360 white focus
-  on-key [
-    case [
-      all [event/key = #"^O" event/ctrl?] [load-dir]
-      all [event/key = #"^P" event/ctrl?] [git-pull load-repo]
-    ]
-  ]
-
+  
   below
+  space 10x0
+  panel [
+    origin 0x0
+    button "Open" [load-dir]
+    button "Pull" [git-pull load-repo]
+    button "Push" [git-push load-repo]
+  ]
+ 
+  canvas: base 600x500 white focus on-key [if event/key = #"^O" [load-dir]]
+  return
+
+  space 10x10
+  text "Branches"
+  branches-list-face: text-list 300x100 data []
+  
   text "Staged Changes"
   staged-changes: text-list 300x100 data []
   on-dbl-click [
@@ -64,6 +72,7 @@ view win: layout [
     ; reload
     load-repo
     message/text: ""
+    amend/data: false
   ]
   button "commit & push" [
     uppercase/part message/text 1
@@ -73,6 +82,7 @@ view win: layout [
     ; reload
     load-repo
     message/text: ""
+    amend/data: false
   ]
   return
 

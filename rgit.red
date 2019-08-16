@@ -6,7 +6,6 @@ Red [Needs: 'View]
 #include %prompt-popup.red
 
 graph: copy []
-git-head: copy []
 
 load-dir: does [
   repo-dir: request-dir
@@ -18,8 +17,7 @@ load-dir: does [
 ]
 
 load-repo: does [
-  set [graph git-head] git-graph git-log
-  canvas/draw: graph
+  canvas/draw: git-graph git-log
   branches-tlf/data: git-branch
   changes/data: git-status
   clear staged-changes/data
@@ -98,8 +96,8 @@ view win: layout [
   message: area 300x50
 
   amend: check "Amend last commit" 236.236.236 [
-    if all [face/data empty? message/text git-head/2] [
-      message/text: git-head/2
+    if all [face/data empty? message/text] [
+      message/text: git-last-commit
     ]
   ]
 

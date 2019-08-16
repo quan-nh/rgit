@@ -2,10 +2,16 @@ Red []
 
 git-log: does [
   log: copy ""
-  call/output/wait "git log --all --date-order --pretty='%h|%p|%D|%s' -25" log
+  call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -25" log
   log-blk: split log #"^/"
   remove back tail log-blk
   log-blk
+]
+
+git-last-commit: does [
+  msg: copy ""
+  call/output "git log -1 --pretty=%B" msg
+  msg
 ]
 
 git-status: does [

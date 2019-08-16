@@ -2,12 +2,11 @@ Red []
 
 branch-colors: [0.152.212 179.99.5 227.32.23 255.211.0 0.120.42 243.169.187 160.165.169 155.0.86 0.54.136 0.0.0 149.205.186 0.164.167 238.124.14 132.184.23]
 ref-names-color: 168.169.169
-msg-color: 0.0.0
 commit-radius: 3
 init: 70x10
 d: 20x20
 
-draw-commit: func [commit ref-names msg children] [
+draw-commit: func [commit ref-names children] [
   node: select commits commit
   color: pick branch-colors node/x
   pos: as-pair init/x + (d/x * (node/x - 1))
@@ -19,19 +18,11 @@ draw-commit: func [commit ref-names msg children] [
     'circle pos commit-radius
   ]
 
-  msg-pos: as-pair 9 * d/x pos/y - 10
   if not empty? ref-names [
-    x: pos/x + (((length? ref-names) / 3 + 1) * d/x) 
-    msg-pos/x: max msg-pos/x x
     repend result [
       'pen ref-names-color
       'text pos + 5x-10 ref-names
     ]
-  ]
-  
-  repend result [
-    'pen msg-color
-    'text msg-pos msg
   ]
 
   ; draw line between commit & its children
@@ -111,21 +102,19 @@ git-graph: func [git-log] [
   branches: make map! []            ; key-value: commit & its branch
   active-branches: make vector! [1] ; list active branches, HEAD branch is the first one
   graph: copy [line-width 2]
-  git-head: copy []
   y: 1
 
   ; find the HEAD & set it as first branch
   foreach log git-log [
-    set [commit _ ref-names msg] split log #"|"
+    set [commit _ ref-names] split log #"|"
     if find ref-names "HEAD ->" [
       put branches commit 1
-      put git-head commit msg
       break
     ]
   ]
 
   foreach log git-log [
-    set [commit p ref-names msg] split log #"|"
+    set [commit p ref-names] split log #"|"
     parents: split p space
     children: any [select child-commits commit []]
 
@@ -154,9 +143,9 @@ git-graph: func [git-log] [
     ; update commits position
     put commits commit as-pair x y
     ; draw commit
-    append graph draw-commit commit ref-names msg children
+    append graph draw-commit commit ref-names children
     y: y + 1
   ]
 
-  reduce [graph git-head]
+  graph
 ]

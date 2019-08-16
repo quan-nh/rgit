@@ -102,7 +102,7 @@ git-graph: func [git-log] [
   branches: make map! []            ; key-value: commit & its branch
   active-branches: make vector! [1] ; list active branches, HEAD branch is the first one
   graph: copy [line-width 2]
-  y: 1
+  y: 2
 
   ; find the HEAD & set it as first branch
   foreach log git-log [

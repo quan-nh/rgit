@@ -46,8 +46,14 @@ view win: layout [
     origin 0x0 space 0x0
     canvas: base 180x510 white
     msg-tlf: text-list 300x510 no-border data [] [
-      staged-changes/data: git-show pick hashes msg-tlf/selected
-      clear changes/data
+      commit-hash: pick hashes msg-tlf/selected
+      either empty? commit-hash [
+        changes/data: git-status
+        clear staged-changes/data
+      ] [
+        staged-changes/data: git-show commit-hash
+        clear changes/data
+      ]      
     ]
     author-tlf: text-list 30x510 no-border data []
     date-tlf: text-list 120x510 no-border data []

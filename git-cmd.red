@@ -2,7 +2,7 @@ Red []
 
 git-log: does [
   log: copy ""
-  call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -27" log
+  call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -26" log
   log-blk: split log #"^/"
   remove back tail log-blk
   log-blk
@@ -10,24 +10,26 @@ git-log: does [
 
 git-log-hash: does [
   hash: copy ""
-  call/output/wait "git log --all --date-order --pretty='%h' -27" hash
+  call/output/wait "git log --all --date-order --pretty='%h' -26" hash
   hash-blk: split hash #"^/"
   remove back tail hash-blk
+  insert hash-blk ""
   hash-blk
 ]
 
 git-log-msg: does [
   msg: copy ""
-  call/output/wait "git log --all --date-order --pretty='%s' -27" msg
+  call/output/wait "git log --all --date-order --pretty='%s' -26" msg
   msg-blk: split msg #"^/"
   remove back tail msg-blk
+  insert msg-blk "Local uncommitted changes"
   msg-blk
 ]
 
 git-log-author: does [
   an: copy ""
 
-  call/output/wait "git log --all --date-order --pretty='%an' -27" an
+  call/output/wait "git log --all --date-order --pretty='%an' -26" an
   an-blk: split an #"^/"
   remove back tail an-blk
   forall an-blk [
@@ -37,14 +39,16 @@ git-log-author: does [
     ]
     an-blk/1: short-name
   ]
+  insert an-blk ""
   an-blk
 ]
 
 git-log-date: does [
   ad: copy ""
-  call/output/wait "git log --all --date-order --pretty='%ad' --date=human -27" ad
+  call/output/wait "git log --all --date-order --pretty='%ad' --date=human -26" ad
   ad-blk: split ad #"^/"
   remove back tail ad-blk
+  insert ad-blk ""
   ad-blk
 ]
 

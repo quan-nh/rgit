@@ -4,7 +4,7 @@ branch-colors: [0.152.212 179.99.5 227.32.23 255.211.0 0.120.42 243.169.187 160.
 ref-names-color: 168.169.169
 commit-radius: 3
 init: 70x10
-d: 20x20
+d: 15x18
 
 draw-commit: func [commit ref-names children] [
   node: select commits commit

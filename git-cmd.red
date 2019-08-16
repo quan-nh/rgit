@@ -2,10 +2,41 @@ Red []
 
 git-log: does [
   log: copy ""
-  call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -25" log
+  call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -27" log
   log-blk: split log #"^/"
   remove back tail log-blk
   log-blk
+]
+
+git-log-msg: does [
+  msg: copy ""
+  call/output/wait "git log --all --date-order --pretty='%s' -27" msg
+  msg-blk: split msg #"^/"
+  remove back tail msg-blk
+  msg-blk
+]
+
+git-log-author: does [
+  an: copy ""
+  call/output/wait "git log --all --date-order --pretty='%an' -27" an
+  an-blk: split an #"^/"
+  remove back tail an-blk
+  forall an-blk [
+    short-name: copy ""
+    foreach w split an-blk/1 space [
+      append short-name uppercase copy/part w 1
+    ]
+    change an-blk short-name
+  ]
+  an-blk
+]
+
+git-log-date: does [
+  ad: copy ""
+  call/output/wait "git log --all --date-order --pretty='%ad' --date=human -27" ad
+  ad-blk: split ad #"^/"
+  remove back tail ad-blk
+  ad-blk
 ]
 
 git-last-commit: does [

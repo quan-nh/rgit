@@ -18,6 +18,9 @@ load-dir: does [
 
 load-repo: does [
   canvas/draw: git-graph git-log
+  msg-tlf/data: git-log-msg
+  author-tlf/data: git-log-author
+  date-tlf/data: git-log-date
   branches-tlf/data: git-branch
   changes/data: git-status
   clear staged-changes/data
@@ -38,12 +41,12 @@ view win: layout [
     button "Push" [git-push load-repo]
   ]
  
-  canvas: base 600x500 white focus
-  on-key [
-    switch event/key [
-      #"^O" [load-dir]
-      #"^R" [git-pull load-repo]
-    ]
+  panel [
+    origin 0x0 space 0x0
+    canvas: base 180x510 white
+    msg-tlf: text-list 300x510 no-border data []
+    author-tlf: text-list 30x510 no-border data []
+    date-tlf: text-list 120x510 no-border data []
   ]
   return
 
@@ -66,7 +69,7 @@ view win: layout [
       ]
     ]
   ]
-  branches-tlf: text-list 300x100 data []
+  branches-tlf: text-list 270x100 data []
   on-dbl-click [
     branch-name: pick branches-tlf/data branches-tlf/selected
     remove/part branch-name 2
@@ -76,7 +79,7 @@ view win: layout [
   
   space 10x10
   text "Staged Changes"
-  staged-changes: text-list 300x100 data [] [
+  staged-changes: text-list 270x100 data [] [
     diff-rtf/draw: diff-layout git-diff pick staged-changes/data staged-changes/selected
   ]
   on-dbl-click [
@@ -85,7 +88,7 @@ view win: layout [
   ]
 
   text "Changes"
-  changes: text-list 300x100 data [] [
+  changes: text-list 270x100 data [] [
     diff-rtf/draw: diff-layout git-diff pick changes/data changes/selected
   ]
   on-dbl-click [
@@ -93,7 +96,7 @@ view win: layout [
     remove at changes/data changes/selected
   ]
 
-  message: area 300x50
+  message: area 270x50
 
   amend: check "Amend last commit" 236.236.236 [
     if all [face/data empty? message/text] [
@@ -119,5 +122,11 @@ view win: layout [
   ]
   return
 
-  diff-rtf: rich-text 910x300
+  diff-rtf: rich-text 910x300 focus
+  on-key [
+    switch event/key [
+      #"^O" [load-dir]
+      #"^R" [git-pull load-repo]
+    ]
+  ]
 ]

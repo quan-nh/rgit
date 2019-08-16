@@ -69,6 +69,12 @@ view win: layout [
     ]
   ]
   branches-tlf: text-list 300x100 data []
+  on-dbl-click [
+    branch-name: pick branches-tlf/data branches-tlf/selected
+    remove/part branch-name 2
+    git-checkout-branch branch-name
+    load-repo
+  ]
   
   space 10x10
   text "Staged Changes"

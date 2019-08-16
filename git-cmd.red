@@ -19,7 +19,7 @@ git-status: does [
 git-add: func [changes-blk] [
   foreach change changes-blk [
     file: last split change #" "
-    call/console/wait append copy "git add --force -- " file
+    call/wait append copy "git add --force -- " file
   ]
 ]
 
@@ -27,7 +27,7 @@ git-commit: func [msg amend?] [
   cmd: copy "git commit"
   if amend? [append cmd " --amend"]
 
-  call/console/wait rejoin [cmd " -m '" msg "'"]
+  call/wait rejoin [cmd " -m '" msg "'"]
 ]
 
 git-pull: does [
@@ -38,7 +38,7 @@ git-push: func [force?] [
   cmd: copy "git push"
   if force? [append cmd " --force-with-lease"]
 
-  call/console/wait rejoin [cmd " origin"]
+  call/wait rejoin [cmd " origin"]
 ]
 
 git-branch: does [
@@ -50,12 +50,11 @@ git-branch: does [
 ]
 
 git-new-branch: func [branch-name] [
-  call/wait append copy "git branch --no-track " branch-name
-  call append copy "git checkout " branch-name
+  call/wait append copy "git branch " branch-name
 ]
 
 git-checkout-branch: func [branch-name] [
-  call append copy "git checkout " branch-name
+  call/console append copy "git checkout " branch-name
 ]
 
 git-diff: func [file] [

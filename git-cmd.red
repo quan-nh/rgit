@@ -66,9 +66,9 @@ git-status: does [
   changes-blk
 ]
 
-git-show: func [commit-hash] [
+git-show-commit: func [hash] [
   changes-list: copy ""
-  call/output append copy "git show --pretty='' --name-only " commit-hash changes-list
+  call/output append copy "git show --pretty='' --name-only " hash changes-list
   changes-blk: split changes-list #"^/"
   remove back tail changes-blk
   changes-blk
@@ -120,6 +120,15 @@ git-diff: func [file] [
   call/output/wait append copy "git diff -- " file diff
   diff-blk: split diff #"^/"
   remove/part diff-blk 4
+  remove back tail diff-blk
+  diff-blk
+]
+
+git-diff-commit: func [commit file] [
+  diff: copy ""
+  call/output/wait rejoin ["git show " commit " -- " file] diff
+  diff-blk: split diff #"^/"
+  remove/part diff-blk 10
   remove back tail diff-blk
   diff-blk
 ]

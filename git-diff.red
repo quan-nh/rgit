@@ -2,7 +2,7 @@ Red []
 
 diff-layout: func [diff] [
   rtf: copy []
-  i: 0 step: 20
+  i: 0 step: 18
   foreach line diff [
     layout: none
     switch/default copy/part line 1 [

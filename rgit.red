@@ -19,7 +19,7 @@ load-dir: does [
 load-repo: does [
   canvas/draw: git-graph git-log
   hashes: git-log-hash
-  msg-tlf/data: git-log-msg
+  msg-tlf/data: git-log-msg msg-tlf/selected: 1
   author-tlf/data: git-log-author
   date-tlf/data: git-log-date
   branches-tlf/data: git-branch
@@ -46,12 +46,11 @@ view win: layout [
     origin 0x0 space 0x0
     canvas: base 180x510 white
     msg-tlf: text-list 300x510 no-border data [] [
-      commit-hash: pick hashes msg-tlf/selected
-      either empty? commit-hash [
+      either empty? hash: pick hashes msg-tlf/selected [
         changes/data: git-status
         clear staged-changes/data
       ] [
-        staged-changes/data: git-show commit-hash
+        staged-changes/data: git-show-commit hash
         clear changes/data
       ]      
     ]
@@ -90,7 +89,12 @@ view win: layout [
   space 10x10
   text "Staged Changes"
   staged-changes: text-list 270x100 data [] [
-    diff-rtf/draw: diff-layout git-diff pick staged-changes/data staged-changes/selected
+    either msg-tlf/selected = 1 [
+      diff-rtf/draw: diff-layout git-diff pick staged-changes/data staged-changes/selected
+    ] [
+      diff-rtf/draw: diff-layout git-diff-commit pick hashes msg-tlf/selected pick staged-changes/data staged-changes/selected
+    ]
+    
   ]
   on-dbl-click [
     append changes/data pick staged-changes/data staged-changes/selected

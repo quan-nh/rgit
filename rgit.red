@@ -5,7 +5,7 @@ Red [Needs: 'View]
 #include %git-graph.red
 #include %prompt-popup.red
 
-graph: copy []
+hashes: copy []
 
 load-dir: does [
   repo-dir: request-dir
@@ -18,6 +18,7 @@ load-dir: does [
 
 load-repo: does [
   canvas/draw: git-graph git-log
+  hashes: git-log-hash
   msg-tlf/data: git-log-msg
   author-tlf/data: git-log-author
   date-tlf/data: git-log-date
@@ -44,7 +45,10 @@ view win: layout [
   panel [
     origin 0x0 space 0x0
     canvas: base 180x510 white
-    msg-tlf: text-list 300x510 no-border data []
+    msg-tlf: text-list 300x510 no-border data [] [
+      staged-changes/data: git-show pick hashes msg-tlf/selected
+      clear changes/data
+    ]
     author-tlf: text-list 30x510 no-border data []
     date-tlf: text-list 120x510 no-border data []
   ]

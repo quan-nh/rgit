@@ -8,6 +8,14 @@ git-log: does [
   log-blk
 ]
 
+git-log-hash: does [
+  hash: copy ""
+  call/output/wait "git log --all --date-order --pretty='%h' -27" hash
+  hash-blk: split hash #"^/"
+  remove back tail hash-blk
+  hash-blk
+]
+
 git-log-msg: does [
   msg: copy ""
   call/output/wait "git log --all --date-order --pretty='%s' -27" msg
@@ -18,6 +26,7 @@ git-log-msg: does [
 
 git-log-author: does [
   an: copy ""
+
   call/output/wait "git log --all --date-order --pretty='%an' -27" an
   an-blk: split an #"^/"
   remove back tail an-blk
@@ -26,7 +35,7 @@ git-log-author: does [
     foreach w split an-blk/1 space [
       append short-name uppercase copy/part w 1
     ]
-    change an-blk short-name
+    an-blk/1: short-name
   ]
   an-blk
 ]
@@ -48,6 +57,14 @@ git-last-commit: does [
 git-status: does [
   changes-list: copy ""
   call/output "git status --porcelain" changes-list
+  changes-blk: split changes-list #"^/"
+  remove back tail changes-blk
+  changes-blk
+]
+
+git-show: func [commit-hash] [
+  changes-list: copy ""
+  call/output append copy "git show --pretty='' --name-only " commit-hash changes-list
   changes-blk: split changes-list #"^/"
   remove back tail changes-blk
   changes-blk

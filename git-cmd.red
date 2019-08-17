@@ -1,5 +1,16 @@
 Red []
 
+git-pull: does [
+  call/wait "git pull"
+]
+
+git-push: func [force?] [
+  cmd: copy "git push"
+  if force? [append cmd " --force-with-lease"]
+
+  call/wait rejoin [cmd " origin"]
+]
+
 git-log: does [
   log: copy ""
   call/output/wait "git log --all --date-order --pretty='%h|%p|%D' -26" log
@@ -58,6 +69,22 @@ git-last-commit: does [
   msg
 ]
 
+git-branch: does [
+  b: copy ""
+  call/output/wait "git branch -a --no-color" b
+  blk: split b #"^/"
+  remove back tail blk
+  blk
+]
+
+git-new-branch: func [branch-name] [
+  call/wait append copy "git branch " branch-name
+]
+
+git-checkout-branch: func [branch-name] [
+  call/console append copy "git checkout " branch-name
+]
+
 git-status: does [
   changes-list: copy ""
   call/output "git status --porcelain" changes-list
@@ -88,31 +115,8 @@ git-commit: func [msg amend?] [
   call/wait rejoin [cmd " -m '" msg "'"]
 ]
 
-git-pull: does [
-  call/wait "git pull"
-]
-
-git-push: func [force?] [
-  cmd: copy "git push"
-  if force? [append cmd " --force-with-lease"]
-
-  call/wait rejoin [cmd " origin"]
-]
-
-git-branch: does [
-  b: copy ""
-  call/output/wait "git branch -a --no-color" b
-  blk: split b #"^/"
-  remove back tail blk
-  blk
-]
-
-git-new-branch: func [branch-name] [
-  call/wait append copy "git branch " branch-name
-]
-
-git-checkout-branch: func [branch-name] [
-  call/console append copy "git checkout " branch-name
+git-discard: func [change] [
+  call append copy "git checkout " last split change #" "
 ]
 
 git-diff: func [file] [

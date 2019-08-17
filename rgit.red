@@ -99,17 +99,31 @@ view win: layout [
   on-dbl-click [
     append changes/data pick staged-changes/data staged-changes/selected
     remove at staged-changes/data staged-changes/selected
+    diff-rtf/draw: none
   ]
 
-  text "Changes"
+  panel [
+    origin 0x0
+    text "Changes"
+    button "Discard" [
+      if positive? changes/selected [
+        git-discard pick changes/data changes/selected
+        remove at changes/data changes/selected
+        diff-rtf/draw: none
+      ]
+    ]
+  ]
+  space 10x0
   changes: text-list 270x100 data [] [
     diff-rtf/draw: diff-layout git-diff pick changes/data changes/selected
   ]
   on-dbl-click [
     append staged-changes/data pick changes/data changes/selected
     remove at changes/data changes/selected
+    diff-rtf/draw: none
   ]
 
+  space 10x10
   message: area 270x50
 
   amend: check "Amend last commit" 236.236.236 [

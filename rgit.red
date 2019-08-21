@@ -3,7 +3,7 @@ Red [Needs: 'View]
 #include %git-cmd.red
 #include %git-diff.red
 #include %git-graph.red
-#include %prompt-popup.red
+#include %dialogs.red
 
 hashes: copy []
 
@@ -82,8 +82,10 @@ view win: layout [
   on-dbl-click [
     branch-name: pick branches-tlf/data branches-tlf/selected
     remove/part branch-name 2
-    git-checkout-branch branch-name
-    load-repo
+    err: git-checkout-branch branch-name
+    either find err "Aborting" [
+      alert-popup err
+    ] [load-repo]
   ]
   
   space 10x10

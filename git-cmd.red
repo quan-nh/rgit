@@ -82,7 +82,9 @@ git-new-branch: func [branch-name] [
 ]
 
 git-checkout-branch: func [branch-name] [
-  call/console append copy "git checkout " branch-name
+  err: copy ""
+  call/error append copy "git checkout " branch-name err
+  err
 ]
 
 git-status: does [

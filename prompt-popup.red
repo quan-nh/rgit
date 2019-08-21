@@ -5,7 +5,7 @@ prompt-popup: function [
     msg [string!] "Message to display"
 ] [
     result: none ;-- in case user closes window with 'X'
-    view/flags/options [
+    view/flags [
         title ""
         msg-text: text msg center return
         in-field: field return
@@ -24,6 +24,6 @@ prompt-popup: function [
             in-field/size/x: 150
             in-field/offset/x: win-centre - (in-field/size/x / 2)
         ]
-    ] [modal popup] [offset: 800x70]
+    ] [modal popup]
     result
 ]

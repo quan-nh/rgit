@@ -17,7 +17,7 @@ load-dir: does [
 ]
 
 load-repo: does [
-  canvas/draw: git-graph git-log
+  canvas/draw: git-graph/draw-graph git-log
   hashes: git-log-hash
   msg-tlf/data: git-log-msg msg-tlf/selected: 1
   author-tlf/data: git-log-author
